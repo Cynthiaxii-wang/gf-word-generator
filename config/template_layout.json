@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "template": "总量通用.docx",
+  "chart_template": "template/图表模板案例新版.xlsx",
+  "back_matter_template": "examples/output/【广发策略】从杠杆繁荣到筹码松动：韩国杠杆去化走到哪一步？(1).docx",
+  "back_matter_start_section_break": 2,
+  "cover": {
+    "top_level_table_index": 0,
+    "title_marker": "[Table_Title]",
+    "title_row_offset": 1,
+    "subtitle_row_offset": 2,
+    "summary_marker": "[Table_Summary]",
+    "risk_style": "首页正文",
+    "summary_row_offset": 1,
+    "industry_date_marker": "[Table_IndustryAndDate]",
+    "industry_date_row_offset": 1,
+    "clear_sidebar_top_level_rows": [3, 4, 5]
+  },
+  "index": {
+    "title": "目录索引",
+    "visual_title": "图表索引",
+    "replace_after_section_break": 1,
+    "toc_levels": "1-2",
+    "figure_sequence": "图",
+    "table_sequence": "表",
+    "insert_page_break_between_indexes": true,
+    "insert_page_break_after": true
+  },
+  "figure_layout": {
+    "width_dxa": 8051,
+    "indent_dxa": 2689,
+    "cell_width_dxa": 8051,
+    "cell_margin_left_dxa": 0,
+    "cell_margin_right_dxa": 0,
+    "cell_margin_vertical_dxa": 57,
+    "keep_together": true,
+    "center_visual": true
+  },
+  "double_figure_layout": {
+    "width_dxa": 10296,
+    "column_width_dxa": 5148,
+    "cell_margin_left_dxa": 0,
+    "cell_margin_right_dxa": 0,
+    "cell_margin_vertical_dxa": 57,
+    "caption_center_gap_dxa": 114,
+    "max_drawing_width_emu": 3140000,
+    "keep_together": true,
+    "center_visual": true,
+    "alignment": "right"
+  },
+  "risk_section": {
+    "title_font": "思源黑体 CN Medium",
+    "title_font_size_half_points": 22,
+    "item_font": "思源黑体 CN Medium",
+    "item_font_size_half_points": 17,
+    "fallback_text": "风险提示：AI资本开支、存储价格及企业盈利不及预期；海外流动性收紧导致外资加速流出；散户承接能力下降；未收金强平压力超预期上升。"
+  },
+  "caption_separator": {
+    "font": "思源黑体 CN Medium",
+    "font_size_half_points": 16,
+    "line_twips": 240,
+    "line_rule": "exact",
+    "prefix": "'",
+    "style": "single",
+    "size_eighth_points": 4,
+    "space_points": 1,
+    "color": "000000",
+    "after_twips": 40
+  },
+  "data_source": {
+    "text": "数据来源：Bloomberg、广发证券发展研究中心",
+    "font": "思源黑体 CN Light",
+    "font_size_half_points": 12,
+    "before_twips": 20,
+    "after_twips": 80,
+    "line_twips": 160,
+    "line_rule": "exact"
+  },
+  "text": {
+    "normal_font": "思源黑体 CN Light",
+    "emphasis_font": "思源黑体 CN Medium"
+  },
+  "running_header": {
+    "category": "投资策略",
+    "report_type": "专题报告"
+  },
+  "body": {
+    "start_style": "内页一级标题",
+    "end_before_section_break": 2
+  },
+  "styles": {
+    "heading1": "内页一级标题",
+    "heading2": "内页二级标题",
+    "heading3": "内页三级标题",
+    "paragraph": "内页正文",
+    "figure_caption": "题注 + 思源黑体 CN Medium 6 磅",
+    "table_caption": "题注 + 思源黑体 CN Medium 6 磅"
+  }
+}

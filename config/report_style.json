@@ -1,0 +1,1371 @@
+{
+    "template": "总量通用.docx",
+    "page": {
+        "page_width_cm": 21.0,
+        "page_height_cm": 29.7,
+        "margin": {
+            "top_cm": 0.86,
+            "bottom_cm": 0.69,
+            "left_cm": 0.8,
+            "right_cm": 0.8
+        }
+    },
+    "styles": {
+        "Normal": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "Arial",
+                "size_pt": 6.0,
+                "color": "000000"
+            },
+            "paragraph": {}
+        },
+        "Heading 1": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 11.0,
+                "bold": true
+            },
+            "paragraph": {
+                "space_before": 16.3,
+                "first_line_indent": -16.15,
+                "left_indent": 150.9
+            }
+        },
+        "Heading 2": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 9.0
+            },
+            "paragraph": {
+                "line_spacing_pt": 19.0,
+                "first_line_indent": -5.6,
+                "left_indent": 133.3
+            }
+        },
+        "Heading 3": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 16.0,
+                "bold": true
+            },
+            "paragraph": {
+                "space_before": 13.0,
+                "space_after": 13.0,
+                "line_spacing": 1.7333333333333334
+            }
+        },
+        "Default Paragraph Font": {
+            "type": "CHARACTER (2)",
+            "font": {}
+        },
+        "Normal Table": {
+            "type": "TABLE (3)",
+            "font": {},
+            "paragraph": {}
+        },
+        "Caption": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 10.0
+            },
+            "paragraph": {}
+        },
+        "Document Map": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "宋体",
+                "size_pt": 9.0
+            },
+            "paragraph": {
+                "line_spacing": 1.5
+            }
+        },
+        "annotation text": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {}
+        },
+        "Balloon Text": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 9.0
+            },
+            "paragraph": {}
+        },
+        "Footer": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 9.0
+            },
+            "paragraph": {}
+        },
+        "Header": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 9.0
+            },
+            "paragraph": {}
+        },
+        "toc 1": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 8.5
+            },
+            "paragraph": {
+                "space_before": 2.5,
+                "line_spacing": 1.25
+            }
+        },
+        "footnote text": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 9.0
+            },
+            "paragraph": {}
+        },
+        "table of figures": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 8.5
+            },
+            "paragraph": {
+                "line_spacing_pt": 18.0,
+                "first_line_indent": -10.0,
+                "left_indent": 24.75
+            }
+        },
+        "toc 2": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 8.5
+            },
+            "paragraph": {
+                "line_spacing_pt": 18.0,
+                "left_indent": 15.3
+            }
+        },
+        "annotation subject": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "bold": true
+            },
+            "paragraph": {}
+        },
+        "Table Grid": {
+            "type": "TABLE (3)",
+            "font": {
+                "color": "FFFFFF"
+            },
+            "paragraph": {}
+        },
+        "FollowedHyperlink": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "color": "800080"
+            }
+        },
+        "Hyperlink": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "color": "0000FF"
+            }
+        },
+        "annotation reference": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 10.5
+            }
+        },
+        "footnote reference": {
+            "type": "CHARACTER (2)",
+            "font": {}
+        },
+        "首页副标题": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 15.0,
+                "color": "2C2F5D"
+            },
+            "paragraph": {
+                "line_spacing_pt": 21.0
+            }
+        },
+        "首页副标题 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "Arial",
+                "size_pt": 15.0,
+                "color": "2C2F5D"
+            }
+        },
+        "首页正文": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 8.5,
+                "color": "0D0D0D"
+            },
+            "paragraph": {
+                "space_after": 5.0,
+                "line_spacing_pt": 19.0
+            }
+        },
+        "首页正文 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 8.5,
+                "color": "0D0D0D"
+            }
+        },
+        "图表文字格式": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 7.0,
+                "color": "0D0D0D"
+            },
+            "paragraph": {
+                "line_spacing_pt": 10.0
+            }
+        },
+        "图表文字格式 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 7.0,
+                "color": "0D0D0D"
+            }
+        },
+        "公司评级表头": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 9.0,
+                "color": "B2B2B2"
+            },
+            "paragraph": {}
+        },
+        "公司评级表头 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 9.0,
+                "color": "B2B2B2"
+            }
+        },
+        "公司评级左侧文字": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 7.0,
+                "color": "B2B2B2"
+            },
+            "paragraph": {
+                "line_spacing_pt": 9.0,
+                "first_line_indent": -7.95,
+                "left_indent": 4.1
+            }
+        },
+        "公司评级左侧文字 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "Arial",
+                "size_pt": 7.0,
+                "color": "B2B2B2"
+            }
+        },
+        "公司评级右侧数字": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 7.0,
+                "color": "FFFFFF"
+            },
+            "paragraph": {
+                "line_spacing_pt": 9.0
+            }
+        },
+        "公司评级右侧数字 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "Arial",
+                "size_pt": 7.0,
+                "color": "FFFFFF"
+            }
+        },
+        "基本数据/市场表现/相关研究表头": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 7.0,
+                "color": "2C2F5D"
+            },
+            "paragraph": {}
+        },
+        "基本数据/市场表现/相关研究表头 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 7.0,
+                "color": "2C2F5D"
+            }
+        },
+        "分析师表头": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 8.0,
+                "color": "2C2F5D"
+            },
+            "paragraph": {
+                "space_before": 1.0,
+                "space_after": 1.0
+            }
+        },
+        "分析师表头 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 8.0,
+                "color": "2C2F5D"
+            }
+        },
+        "基本数据/相关研究表格左侧文字": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {
+                "line_spacing_pt": 8.0
+            }
+        },
+        "基本数据/相关研究表格左侧文字 字符": {
+            "type": "CHARACTER (2)",
+            "font": {}
+        },
+        "基本数据/相关研究表格右侧数据": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {
+                "line_spacing_pt": 8.0
+            }
+        },
+        "基本数据/相关研究表格右侧数据 字符": {
+            "type": "CHARACTER (2)",
+            "font": {}
+        },
+        "分析师正文": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {
+                "line_spacing_pt": 8.0
+            }
+        },
+        "分析师正文 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "Arial"
+            }
+        },
+        "标题 2 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 9.0,
+                "color": "000000"
+            }
+        },
+        "标题 1 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 11.0,
+                "bold": true,
+                "color": "000000"
+            }
+        },
+        "目录索引/图表索引": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 8.5
+            },
+            "paragraph": {
+                "line_spacing_pt": 18.0,
+                "left_indent": 14.75
+            }
+        },
+        "目录索引/图表索引 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 8.5,
+                "color": "000000"
+            }
+        },
+        "目录索引一级标题": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 8.5
+            },
+            "paragraph": {
+                "line_spacing_pt": 18.0,
+                "left_indent": 14.75
+            }
+        },
+        "目录索引一级标题 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 8.5
+            }
+        },
+        "目录索引二级标题": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {
+                "left_indent": 14.75
+            }
+        },
+        "TOC 2 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 8.5
+            }
+        },
+        "目录索引二级标题 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 8.5
+            }
+        },
+        "图表索引一级标题": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {
+                "first_line_indent": -17.0,
+                "left_indent": 34.7
+            }
+        },
+        "图表索引一级标题 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Regular",
+                "size_pt": 8.5
+            }
+        },
+        "二级标题": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {}
+        },
+        "内页二级标题": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "Arial"
+            },
+            "paragraph": {
+                "space_before": 2.5,
+                "line_spacing": 1.0,
+                "left_indent": 112.0
+            }
+        },
+        "二级标题 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 9.0,
+                "color": "000000"
+            }
+        },
+        "内页二级标题 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 9.0,
+                "color": "000000"
+            }
+        },
+        "内页正文": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 8.5
+            },
+            "paragraph": {
+                "space_after": 5.0,
+                "line_spacing_pt": 19.0,
+                "left_indent": 112.0
+            }
+        },
+        "内页正文 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 8.5
+            }
+        },
+        "图表表头格式": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "思源黑体 CN Medium"
+            },
+            "paragraph": {}
+        },
+        "图表表头格式 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 6.0,
+                "color": "000000"
+            }
+        },
+        "图表数据来源": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {
+                "space_before": 8.15,
+                "space_after": 8.15,
+                "line_spacing": 1.05,
+                "left_indent": 134.65
+            }
+        },
+        "图表数据来源 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Light",
+                "size_pt": 6.0,
+                "color": "000000"
+            }
+        },
+        "图表-数据来源": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {}
+        },
+        "图表-数据来源 字符": {
+            "type": "CHARACTER (2)",
+            "font": {}
+        },
+        "财务附表表头": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 7.0
+            },
+            "paragraph": {
+                "line_spacing_pt": 10.0,
+                "first_line_indent": 2.85
+            }
+        },
+        "财务附表表头 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 7.0
+            }
+        },
+        "财务附表标题左侧文字": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 7.0
+            },
+            "paragraph": {
+                "line_spacing_pt": 10.0,
+                "first_line_indent": 2.85
+            }
+        },
+        "财务附表标题左侧文字 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 7.0
+            }
+        },
+        "财务附表副标题-右侧": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 6.5
+            },
+            "paragraph": {
+                "line_spacing_pt": 10.0
+            }
+        },
+        "财务附表副标题-右侧 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 6.5
+            }
+        },
+        "财务附表-内页首行": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 5.5
+            },
+            "paragraph": {
+                "first_line_indent": 2.85
+            }
+        },
+        "财务附表-内页首行 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "Arial",
+                "size_pt": 5.5
+            }
+        },
+        "财务附表内页-次行": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {
+                "line_spacing_pt": 10.0,
+                "first_line_indent": 2.85
+            }
+        },
+        "财务附表内页-次行 字符": {
+            "type": "CHARACTER (2)",
+            "font": {}
+        },
+        "行业/公司投资评级说明表头": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 9.0
+            },
+            "paragraph": {}
+        },
+        "行业/公司投资评级说明表头 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 9.0
+            }
+        },
+        "联系我们表头": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 9.0
+            },
+            "paragraph": {}
+        },
+        "联系我们表头 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 9.0
+            }
+        },
+        "声明表头": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 7.0
+            },
+            "paragraph": {}
+        },
+        "声明表头 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 7.0
+            }
+        },
+        "声明正文": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {}
+        },
+        "声明正文 字符": {
+            "type": "CHARACTER (2)",
+            "font": {}
+        },
+        "联系我们内页": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 7.5
+            },
+            "paragraph": {}
+        },
+        "内页一级标题": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "Arial",
+                "bold": false
+            },
+            "paragraph": {
+                "space_after": 8.15,
+                "line_spacing_pt": 20.0,
+                "left_indent": 134.4
+            }
+        },
+        "联系我们内页 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 7.5
+            }
+        },
+        "正文内页格式": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 8.5
+            },
+            "paragraph": {
+                "line_spacing_pt": 19.0,
+                "first_line_indent": 1.7,
+                "left_indent": 132.85
+            }
+        },
+        "正文内页格式 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Light",
+                "size_pt": 8.5,
+                "color": "000000"
+            }
+        },
+        "首页主标题": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 22.0,
+                "color": "2C2F5D"
+            },
+            "paragraph": {
+                "line_spacing_pt": 32.0
+            }
+        },
+        "首页主标题 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "Arial",
+                "size_pt": 22.0,
+                "color": "2C2F5D"
+            }
+        },
+        "行业/公司投资评级说明内页": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 7.5
+            },
+            "paragraph": {}
+        },
+        "行业/公司投资评级说明内页 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 7.5
+            }
+        },
+        "研究小组表头": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "思源黑体 CN Regular",
+                "size_pt": 11.0,
+                "color": "FFFFFF"
+            },
+            "paragraph": {}
+        },
+        "研究小组表头 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Regular",
+                "size_pt": 11.0,
+                "color": "FFFFFF"
+            }
+        },
+        "研究小组成员姓名": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "思源黑体 CN",
+                "color": "FFFFFF"
+            },
+            "paragraph": {
+                "line_spacing_pt": 13.0
+            }
+        },
+        "研究小组成员姓名 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN",
+                "size_pt": 6.0,
+                "color": "FFFFFF"
+            }
+        },
+        "研究小组成员介绍": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "color": "FFFFFF"
+            },
+            "paragraph": {
+                "line_spacing_pt": 13.0
+            }
+        },
+        "研究小组成员介绍 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Light",
+                "size_pt": 6.0,
+                "color": "FFFFFF"
+            }
+        },
+        "分析师及联系人标题": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 15.0
+            },
+            "paragraph": {}
+        },
+        "分析师及联系人标题 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 15.0
+            }
+        },
+        "分析师头像": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "bold": true
+            },
+            "paragraph": {
+                "line_spacing_pt": 12.0
+            }
+        },
+        "分析师头像 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Light",
+                "size_pt": 6.0,
+                "bold": true,
+                "color": "000000"
+            }
+        },
+        "分析师个人姓名介绍": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 8.0,
+                "color": "25015E"
+            },
+            "paragraph": {
+                "line_spacing_pt": 12.0
+            }
+        },
+        "分析师个人姓名介绍 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "Arial",
+                "size_pt": 8.0,
+                "color": "25015E"
+            }
+        },
+        "分析师联系方式": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "思源黑体 CN Regular"
+            },
+            "paragraph": {}
+        },
+        "分析师联系方式 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Regular",
+                "size_pt": 6.0,
+                "color": "000000"
+            }
+        },
+        "首页研究报告表头": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 9.0,
+                "color": "404040"
+            },
+            "paragraph": {
+                "line_spacing": 0.8
+            }
+        },
+        "首页研究报告表头 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 9.0,
+                "color": "404040"
+            }
+        },
+        "公司评级-粗体": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 12.0,
+                "color": "A6A6A6"
+            },
+            "paragraph": {}
+        },
+        "公司评级-粗体 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 12.0,
+                "color": "A6A6A6"
+            }
+        },
+        "页眉 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 9.0
+            }
+        },
+        "页脚 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 9.0
+            }
+        },
+        "页脚-声明": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "思源黑体 CN Medium"
+            },
+            "paragraph": {}
+        },
+        "页脚-声明 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 6.0,
+                "color": "000000"
+            }
+        },
+        "页码-格式": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 8.5,
+                "color": "25015E"
+            },
+            "paragraph": {}
+        },
+        "页码-格式 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 8.5,
+                "color": "25015E"
+            }
+        },
+        "页眉-格式": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 9.5,
+                "color": "5B5B5B"
+            },
+            "paragraph": {}
+        },
+        "页眉-格式 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 9.5,
+                "color": "5B5B5B"
+            }
+        },
+        "分析师信息执业证号": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {
+                "line_spacing_pt": 10.0
+            }
+        },
+        "分析师无牌照提示": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "color": "595959"
+            },
+            "paragraph": {
+                "line_spacing": 0.8
+            }
+        },
+        "图表表头": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "Arial",
+                "size_pt": 8.0
+            },
+            "paragraph": {
+                "line_spacing_pt": 12.0
+            }
+        },
+        "图表表头 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 8.0,
+                "color": "000000"
+            }
+        },
+        "表头格式": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 6.0
+            },
+            "paragraph": {}
+        },
+        "题注 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 10.0
+            }
+        },
+        "表头格式 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 6.0,
+                "color": "000000"
+            }
+        },
+        "文档结构图 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "宋体",
+                "size_pt": 9.0
+            }
+        },
+        "表格首行": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 7.0
+            },
+            "paragraph": {
+                "line_spacing_pt": 10.0
+            }
+        },
+        "表格首行 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 7.0
+            }
+        },
+        "批注文字 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 12.0
+            }
+        },
+        "批注主题 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 12.0,
+                "bold": true
+            }
+        },
+        "研究小组分析师名称": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 6.5,
+                "color": "FFFFFF"
+            },
+            "paragraph": {}
+        },
+        "Grid Table Light": {
+            "type": "TABLE (3)",
+            "font": {},
+            "paragraph": {}
+        },
+        "Grid Table 3 Accent 6": {
+            "type": "TABLE (3)",
+            "font": {},
+            "paragraph": {}
+        },
+        "Grid Table 1 Light Accent 6": {
+            "type": "TABLE (3)",
+            "font": {},
+            "paragraph": {}
+        },
+        "zhengwenbiao1": {
+            "type": "TABLE (3)",
+            "font": {
+                "name": "思源黑体 CN Regular",
+                "size_pt": 10.0
+            },
+            "paragraph": {}
+        },
+        "表头-白色": {
+            "type": "TABLE (3)",
+            "font": {},
+            "paragraph": {}
+        },
+        "zhengwenbiaoge2": {
+            "type": "TABLE (3)",
+            "font": {},
+            "paragraph": {}
+        },
+        "Grid Table 4 Accent 6": {
+            "type": "TABLE (3)",
+            "font": {},
+            "paragraph": {}
+        },
+        "样式1": {
+            "type": "TABLE (3)",
+            "font": {},
+            "paragraph": {}
+        },
+        "样式2": {
+            "type": "TABLE (3)",
+            "font": {
+                "color": "FFFFFF"
+            },
+            "paragraph": {}
+        },
+        "批注框文本 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 9.0
+            }
+        },
+        "正文开始说明": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "黑体",
+                "size_pt": 20.0,
+                "bold": true,
+                "color": "FF0000"
+            }
+        },
+        "正文格式": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 10.5
+            },
+            "paragraph": {
+                "space_after": 5.0,
+                "left_indent": 62.85
+            }
+        },
+        "正文格式 Char": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "Arial",
+                "size_pt": 10.5
+            }
+        },
+        "内页三级标题": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 9.0,
+                "bold": false
+            },
+            "paragraph": {
+                "space_before": 2.5,
+                "line_spacing": 1.0,
+                "left_indent": 112.0
+            }
+        },
+        "标题 3 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 16.0,
+                "bold": true
+            }
+        },
+        "内页三级标题 Char": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 9.0,
+                "color": "000000"
+            }
+        },
+        "标题3": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 9.0
+            },
+            "paragraph": {}
+        },
+        "内页一级标题 Char": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 11.0,
+                "bold": false,
+                "color": "000000"
+            }
+        },
+        "标题3 Char": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 9.0,
+                "bold": true,
+                "color": "000000"
+            }
+        },
+        "相关研究-左侧内容": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 5.0
+            },
+            "paragraph": {}
+        },
+        "相关研究-左侧内容 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 5.0
+            }
+        },
+        "相关研究-右侧时间": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 5.0
+            },
+            "paragraph": {
+                "line_spacing_pt": 8.0
+            }
+        },
+        "相关研究-右侧时间 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 5.0
+            }
+        },
+        "盈利预测表头": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 8.5
+            },
+            "paragraph": {}
+        },
+        "盈利预测表头 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "Arial",
+                "size_pt": 8.5
+            }
+        },
+        "未处理的提及1": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "color": "605E5C"
+            }
+        },
+        "财务附表-突出显示行": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 6.0
+            },
+            "paragraph": {
+                "line_spacing_pt": 10.0
+            }
+        },
+        "财务附表-突出显示行 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "Arial",
+                "size_pt": 5.5
+            }
+        },
+        "行业研究小组-表头": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 10.0,
+                "color": "FFFFFF"
+            },
+            "paragraph": {}
+        },
+        "行业研究小组-表头 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 10.0,
+                "color": "FFFFFF"
+            }
+        },
+        "盈利预测表-内文": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 7.0
+            },
+            "paragraph": {}
+        },
+        "盈利预测表-内文 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "name": "Arial",
+                "size_pt": 7.0
+            }
+        },
+        "盈利预测表-左侧文字": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {}
+        },
+        "盈利预测表-左侧文字 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 7.0,
+                "color": "0D0D0D"
+            }
+        },
+        "联系人样式": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 7.0
+            },
+            "paragraph": {}
+        },
+        "分析师信息执业证号 字符": {
+            "type": "CHARACTER (2)",
+            "font": {}
+        },
+        "联系人样式 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 7.0
+            }
+        },
+        "表题": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 10.5,
+                "bold": true,
+                "color": "0F243E"
+            },
+            "paragraph": {}
+        },
+        "表题 Char": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 10.5,
+                "bold": true,
+                "color": "0F243E"
+            }
+        },
+        "图表左侧文字": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {}
+        },
+        "图表左侧文字 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 7.0,
+                "color": "0D0D0D"
+            }
+        },
+        "脚注文本 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 9.0
+            }
+        },
+        "首页图表数据来源": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "size_pt": 5.0
+            },
+            "paragraph": {}
+        },
+        "首页图表数据来源 字符": {
+            "type": "CHARACTER (2)",
+            "font": {
+                "size_pt": 5.0
+            }
+        },
+        "样式 分析师表头 + 段前: 3.25 磅 段后: 3.25 磅": {
+            "type": "PARAGRAPH (1)",
+            "font": {},
+            "paragraph": {
+                "space_before": 3.25,
+                "space_after": 3.25
+            }
+        },
+        "题注 + 思源黑体 CN Medium 6 磅": {
+            "type": "PARAGRAPH (1)",
+            "font": {
+                "name": "思源黑体 CN Medium",
+                "size_pt": 6.0
+            },
+            "paragraph": {}
+        }
+    },
+    "statistics": {
+        "paragraph_count": 75,
+        "table_count": 16,
+        "image_count": 2
+    }
+}

@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+
+# runtime
+runtime/
+
+# temporary
+_docx_tmp/
+_asset_tmp/
+
+# local files
+input/
+output/
+
+# test files
+examples/output/
+
+# environment
+.venv/
+venv/
+
+# mac
+.DS_Store

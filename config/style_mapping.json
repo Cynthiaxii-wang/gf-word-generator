@@ -1,0 +1,37 @@
+{
+    "cover": {
+        "title": "首页主标题",
+        "subtitle": "首页副标题",
+        "body": "首页正文"
+    },
+
+    "content": {
+        "heading1": "内页一级标题",
+        "heading2": "内页二级标题",
+        "heading3": "内页三级标题",
+        "body": "内页正文"
+    },
+
+    "figure": {
+        "caption": "题注 + 思源黑体 CN Medium 6 磅",
+        "source": "图表数据来源",
+        "text": "图表文字格式"
+    },
+
+    "table": {
+        "header": "图表表头格式",
+        "body": "表格首行"
+    },
+
+    "document": {
+        "header": "页眉-格式",
+        "footer": "页脚-声明",
+        "page_number": "页码-格式"
+    },
+
+    "special": {
+        "analyst": "分析师正文",
+        "related_research": "相关研究-左侧内容",
+        "risk_warning": "声明正文"
+    }
+}
