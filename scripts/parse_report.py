@@ -10,8 +10,7 @@ XML级解析 Word
 - chart
 - table
 
-输出:
-examples/output/raw_structure.json
+输出路径由运行命令指定；默认流水线使用独立 runtime/work 目录。
 
 """
 
@@ -161,7 +160,7 @@ def paragraph_numbering(element, definitions, counters):
         else str(value)
     )
     marker = level["text"].replace(f"%{ilvl + 1}", rendered)
-    return {"marker": marker, **level}
+    return {"marker": marker, "ilvl": ilvl, **level}
 
 
 def paragraph_is_heading_like(element):
@@ -567,13 +566,20 @@ def parse(temp_dir):
                     child, numbering, numbering_counters
                 )
                 if not heading and implicit_number and paragraph_is_heading_like(child):
+                    numbered_text = implicit_number["marker"] + text
+                    heading = detect_heading(numbered_text)
                     number_format = implicit_number["format"]
-                    if number_format in {"japaneseCounting", "chineseCounting"}:
-                        heading = "heading2"
-                    elif number_format == "decimal":
-                        heading = "heading3"
+                    if not heading:
+                        if number_format in {"japaneseCounting", "chineseCounting"}:
+                            heading = (
+                                "heading1"
+                                if implicit_number.get("ilvl", 0) == 0
+                                else "heading2"
+                            )
+                        elif number_format == "decimal":
+                            heading = "heading3"
                     if heading:
-                        text = implicit_number["marker"] + text
+                        text = numbered_text
 
 
                 if heading:

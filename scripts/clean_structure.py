@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-OUTPUT_DIR = ROOT_DIR / "examples" / "output"
+OUTPUT_DIR = ROOT_DIR / "runtime"
 DEFAULT_RAW = OUTPUT_DIR / "raw_structure.json"
 DEFAULT_ASSETS = OUTPUT_DIR / "assets_manifest.json"
 DEFAULT_OUTPUT = OUTPUT_DIR / "clean_structure.json"

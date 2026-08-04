@@ -2,8 +2,6 @@
   "version": 1,
   "template": "总量通用.docx",
   "chart_template": "template/图表模板案例新版.xlsx",
-  "back_matter_template": "template/总量通用.docx",
-  "back_matter_start_section_break": 2,
   "cover": {
     "top_level_table_index": 0,
     "title_marker": "[Table_Title]",

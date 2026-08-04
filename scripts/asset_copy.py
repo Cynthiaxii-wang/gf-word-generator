@@ -157,12 +157,54 @@ class PackagePartImporter:
         source_rels_path = self.source_root / source_rels_name
         if source_rels_path.is_file():
             rel_tree = etree.parse(str(source_rels_path))
-            for rel in rel_tree.getroot():
+            external_rids: set[str] = set()
+            for rel in list(rel_tree.getroot()):
                 if rel.get("TargetMode") == "External":
+                    # Publicly generated reports must be self-contained.  Excel
+                    # charts copied from research drafts often retain a link to
+                    # the analyst's local/OneDrive workbook.  Copying that link
+                    # makes Word show an unreadable-content/external-field
+                    # warning on every other computer.  Keep the native chart
+                    # and its cached series, but detach the inaccessible source.
+                    if rel.get("Id"):
+                        external_rids.add(rel.get("Id"))
+                    rel_tree.getroot().remove(rel)
                     continue
                 dependency = resolve_target(source_part, rel.get("Target"))
                 imported_dependency = self.import_part(dependency)
                 rel.set("Target", relative_target(target_part, imported_dependency))
+
+            if external_rids and target_path.suffix.lower() == ".xml":
+                part_tree = etree.parse(str(target_path))
+                relationship_attributes = {
+                    f"{{{R_NS}}}id",
+                    f"{{{R_NS}}}embed",
+                    f"{{{R_NS}}}link",
+                }
+                for node in list(part_tree.getroot().iter()):
+                    referenced = {
+                        node.get(attribute)
+                        for attribute in relationship_attributes
+                        if node.get(attribute)
+                    }
+                    if not referenced.intersection(external_rids):
+                        continue
+                    # c:externalData is only a pointer to the linked workbook;
+                    # removing it does not flatten or rasterise the chart.
+                    if etree.QName(node).localname == "externalData":
+                        parent = node.getparent()
+                        if parent is not None:
+                            parent.remove(node)
+                    else:
+                        for attribute in relationship_attributes:
+                            if node.get(attribute) in external_rids:
+                                node.attrib.pop(attribute, None)
+                part_tree.write(
+                    str(target_path),
+                    xml_declaration=True,
+                    encoding="UTF-8",
+                    standalone=True,
+                )
 
             target_rels_path = self.target_root / relationship_part_name(target_part)
             target_rels_path.parent.mkdir(parents=True, exist_ok=True)
@@ -259,4 +301,3 @@ def clone_with_imported_relationships(
         for node in clone.xpath(".//wp:docPr | .//pic:cNvPr", namespaces={"wp": WP_NS, "pic": PIC_NS}):
             node.set("id", str(next(ids)))
     return clone
-

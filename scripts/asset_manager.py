@@ -18,8 +18,8 @@ from lxml import etree
 
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-DEFAULT_INPUT_DIR = ROOT_DIR / "examples" / "raw"
-DEFAULT_OUTPUT = ROOT_DIR / "examples" / "output" / "assets_manifest.json"
+DEFAULT_INPUT_DIR = ROOT_DIR / "input"
+DEFAULT_OUTPUT = ROOT_DIR / "runtime" / "assets_manifest.json"
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main"

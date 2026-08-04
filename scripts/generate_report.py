@@ -32,8 +32,8 @@ from chart_formatter import apply_chart_template
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_TEMPLATE = ROOT_DIR / "template" / "总量通用.docx"
-DEFAULT_STRUCTURE = ROOT_DIR / "examples" / "output" / "clean_structure.json"
-DEFAULT_MANIFEST = ROOT_DIR / "examples" / "output" / "assets_manifest.json"
+DEFAULT_STRUCTURE = ROOT_DIR / "runtime" / "clean_structure.json"
+DEFAULT_MANIFEST = ROOT_DIR / "runtime" / "assets_manifest.json"
 DEFAULT_LAYOUT = ROOT_DIR / "config" / "template_layout.json"
 DEFAULT_CHART_TEMPLATE = ROOT_DIR / "template" / "图表模板案例新版.xlsx"
 DEFAULT_OUTPUT_DIR = ROOT_DIR / "output"
@@ -586,12 +586,15 @@ def replace_index(
         return deepcopy(match)
 
     def field_prototype(pattern: str) -> etree._Element:
+        normalized_pattern = re.sub(r"\s+", "", pattern)
         match = next(
             (
                 child for child in old_index
                 if child.tag == qn(W_NS, "p")
-                and pattern in " ".join(
-                    child.xpath(".//w:instrText/text()", namespaces=NS)
+                and normalized_pattern in re.sub(
+                    r"\s+",
+                    "",
+                    " ".join(child.xpath(".//w:instrText/text()", namespaces=NS)),
                 )
             ),
             None,
@@ -1433,7 +1436,7 @@ def append_risk_section(
     reference_document: etree._Element,
     reference_styles: etree._Element,
     target_styles: etree._Element,
-    importer: PackagePartImporter,
+    importer: PackagePartImporter | None,
     drawing_ids: itertools.count,
     risk_config: dict | None = None,
     risk_heading_text: str = "一、风险提示",
@@ -1468,8 +1471,10 @@ def append_risk_section(
         items = ["请参阅报告正文所列风险因素"]
 
     blocks: list[etree._Element] = []
-    heading = clone_with_imported_relationships(
-        children[heading_index], importer, drawing_ids
+    heading = (
+        clone_with_imported_relationships(children[heading_index], importer, drawing_ids)
+        if importer is not None
+        else deepcopy(children[heading_index])
     )
     set_paragraph_text(heading, risk_heading_text)
     heading_properties = ensure_paragraph_properties(heading)
@@ -1489,8 +1494,10 @@ def append_risk_section(
     for index, value in enumerate(items):
         is_last = index == len(items) - 1
         prototype = item_prototypes[-1] if is_last else item_prototypes[min(index, len(item_prototypes) - 2)]
-        paragraph = clone_with_imported_relationships(
-            prototype, importer, drawing_ids
+        paragraph = (
+            clone_with_imported_relationships(prototype, importer, drawing_ids)
+            if importer is not None
+            else deepcopy(prototype)
         )
         set_paragraph_text(paragraph, f"{value}{'。' if is_last else '；'}")
         for run in paragraph.findall("w:r", namespaces=NS):
@@ -1748,15 +1755,43 @@ def build_body_blocks(
     return blocks
 
 
-def set_update_fields(target_root: Path) -> None:
+def disable_update_fields_on_open(target_root: Path) -> None:
+    """Avoid Word's misleading external-file warning on document open.
+
+    macOS Word shows that warning for any package with ``updateFields=true``,
+    even when the only fields are a TOC and page numbers.  The generator writes
+    the TOC's cached entries itself; users can still choose Update Field in Word
+    when they need freshly paginated page numbers.
+    """
     path = target_root / "word/settings.xml"
     tree = etree.parse(str(path))
     root = tree.getroot()
     node = root.find("w:updateFields", namespaces=NS)
-    if node is None:
-        node = etree.SubElement(root, qn(W_NS, "updateFields"))
-    node.set(qn(W_NS, "val"), "true")
-    tree.write(str(path), xml_declaration=True, encoding="UTF-8", standalone=True)
+    if node is not None:
+        root.remove(node)
+        tree.write(
+            str(path), xml_declaration=True, encoding="UTF-8", standalone=True
+        )
+
+    # The template's TOC prototypes mark their begin field characters dirty.
+    # That flag alone is enough for Word for Mac to show the same warning even
+    # without ``w:updateFields`` or any external relationship.  Cached TOC text
+    # is already populated by the generator, so clear only the dirty flag.
+    for part_path in (target_root / "word").rglob("*.xml"):
+        part_tree = etree.parse(str(part_path))
+        changed = False
+        for field in part_tree.getroot().xpath("//w:fldChar", namespaces=NS):
+            dirty = qn(W_NS, "dirty")
+            if dirty in field.attrib:
+                field.attrib.pop(dirty)
+                changed = True
+        if changed:
+            part_tree.write(
+                str(part_path),
+                xml_declaration=True,
+                encoding="UTF-8",
+                standalone=True,
+            )
 
 
 def set_core_title(target_root: Path, title: str) -> None:
@@ -1775,17 +1810,17 @@ def fill_running_headers(target_root: Path, layout: dict) -> None:
     header_config = layout.get("running_header", {})
     category = header_config.get("category", "投资策略")
     report_type = header_config.get("report_type", "专题报告")
-    replacements = {
-        "[Table_PageText1]": "",
-        "[Table_PageText2]": "",
-        "XXXX | XX报告": f"{category} | {report_type}",
-    }
     for path in sorted((target_root / "word").glob("header*.xml")):
         tree = etree.parse(str(path))
         changed = False
-        for text_node in tree.getroot().xpath("//w:t", namespaces=NS):
-            if text_node.text in replacements:
-                text_node.text = replacements[text_node.text]
+        for paragraph in tree.getroot().xpath("//w:p", namespaces=NS):
+            value = element_text(paragraph)
+            compact = re.sub(r"\s+", "", value)
+            if compact in {"[Table_PageText1]", "[Table_PageText2]"}:
+                set_paragraph_text(paragraph, "")
+                changed = True
+            elif "XXXX|XX报告" in compact:
+                set_paragraph_text(paragraph, f"{category} | {report_type}")
                 changed = True
         if changed:
             tree.write(
@@ -1802,6 +1837,61 @@ def package_source_for_rels(rels_path: str) -> str:
         return ""
     parent = path.parent.parent
     return str(parent / path.name.removesuffix(".rels"))
+
+
+def detach_external_chart_workbooks(root: Path) -> None:
+    """Remove inaccessible Excel links while retaining native chart XML/cache."""
+    relationship_attributes = {
+        qn(R_NS, "id"), qn(R_NS, "embed"), qn(R_NS, "link")
+    }
+    for rels_path in root.rglob("*.rels"):
+        rels_tree = etree.parse(str(rels_path))
+        external_rids: set[str] = set()
+        for rel in list(rels_tree.getroot()):
+            rel_type = rel.get("Type", "")
+            if (
+                rel.get("TargetMode") == "External"
+                and rel_type.endswith("/oleObject")
+            ):
+                if rel.get("Id"):
+                    external_rids.add(rel.get("Id"))
+                rels_tree.getroot().remove(rel)
+        if not external_rids:
+            continue
+
+        package_name = rels_path.relative_to(root).as_posix()
+        source_part = package_source_for_rels(package_name)
+        part_path = root / source_part if source_part else None
+        if part_path is not None and part_path.is_file() and part_path.suffix == ".xml":
+            part_tree = etree.parse(str(part_path))
+            for node in list(part_tree.getroot().iter()):
+                referenced = {
+                    node.get(attribute)
+                    for attribute in relationship_attributes
+                    if node.get(attribute)
+                }
+                if not referenced.intersection(external_rids):
+                    continue
+                if etree.QName(node).localname == "externalData":
+                    parent = node.getparent()
+                    if parent is not None:
+                        parent.remove(node)
+                else:
+                    for attribute in relationship_attributes:
+                        if node.get(attribute) in external_rids:
+                            node.attrib.pop(attribute, None)
+            part_tree.write(
+                str(part_path),
+                xml_declaration=True,
+                encoding="UTF-8",
+                standalone=True,
+            )
+        rels_tree.write(
+            str(rels_path),
+            xml_declaration=True,
+            encoding="UTF-8",
+            standalone=True,
+        )
 
 
 def validate_package(root: Path) -> None:
@@ -1927,6 +2017,7 @@ def generate(
 
         target_document_tree = etree.parse(str(target_root / "word/document.xml"))
         target_document = target_document_tree.getroot()
+        template_document = deepcopy(target_document)
         target_styles_tree = etree.parse(str(target_root / "word/styles.xml"))
         target_styles = target_styles_tree.getroot()
         source_document = etree.parse(str(source_root / "word/document.xml")).getroot()
@@ -1941,17 +2032,9 @@ def generate(
             child for child in body
             if child.tag == qn(W_NS, "p") and paragraph_style_id(child) == body_start_style_id
         )
-        back_matter_value = layout.get("back_matter_template")
-        back_matter_path = ROOT_DIR / back_matter_value if back_matter_value else None
-        if back_matter_path is not None and not back_matter_path.is_file():
-            raise FileNotFoundError(f"Back-matter template not found: {back_matter_path}")
-        reference_chart_captions = (
-            load_reference_chart_captions(back_matter_path)
-            if back_matter_path is not None else []
-        )
-        chart_caption_fallbacks = map_reference_chart_captions(
-            body_content, reference_chart_captions
-        )
+        # A missing source caption stays missing.  Never borrow a title from
+        # a sample report or from instructional charts in the template.
+        chart_caption_fallbacks: dict[str, str] = {}
         replace_index(
             body,
             body_start,
@@ -1994,51 +2077,29 @@ def generate(
         for offset, block in enumerate(new_blocks):
             body.insert(insertion_index + offset, block)
 
-        # Commit source-asset relationships before importing the fixed closing
-        # section against the updated package graph.
+        # The analyst and legal pages already live after ``body_end`` in the
+        # retained template and remain untouched in place.
         importer.save()
-        if back_matter_path is not None:
-            back_root = temp_path / "back_matter"
-            back_root.mkdir()
-            with ZipFile(back_matter_path) as archive:
-                archive.extractall(back_root)
-            back_document = etree.parse(str(back_root / "word/document.xml")).getroot()
-            back_styles = etree.parse(str(back_root / "word/styles.xml")).getroot()
-            back_importer = PackagePartImporter(back_root, target_root)
-            risk_text = next(
-                (
-                    item.get("text", "") for item in summary
-                    if item.get("text", "").lstrip().startswith("风险提示：")
-                ),
-                layout.get("risk_section", {}).get("fallback_text", ""),
-            )
-            append_risk_section(
-                body,
-                body_end,
-                risk_text,
-                back_document,
-                back_styles,
-                target_styles,
-                back_importer,
-                drawing_ids,
-                layout.get("risk_section"),
-                risk_heading,
-            )
-            replace_back_matter(
-                body,
-                body_end,
-                back_document,
-                back_importer,
-                drawing_ids,
-                back_styles,
-                target_styles,
-                int(layout.get("back_matter_start_section_break", 2)),
-            )
-            back_importer.save()
-            rewrite_missing_package_style_references(
-                target_root, back_styles, target_styles
-            )
-            clear_template_markers(target_document)
+        risk_text = next(
+            (
+                item.get("text", "") for item in summary
+                if item.get("text", "").lstrip().startswith("风险提示：")
+            ),
+            layout.get("risk_section", {}).get("fallback_text", ""),
+        )
+        append_risk_section(
+            body,
+            body_end,
+            risk_text,
+            template_document,
+            target_styles,
+            target_styles,
+            None,
+            drawing_ids,
+            layout.get("risk_section"),
+            risk_heading,
+        )
+        clear_template_markers(target_document)
 
         enforce_single_default_styles(target_styles)
         remove_orphan_bookmarks(target_document)
@@ -2061,9 +2122,10 @@ def generate(
         )
         apply_chart_template(target_root, chart_template_path)
         normalize_word_property_order_in_package(target_root)
-        set_update_fields(target_root)
+        disable_update_fields_on_open(target_root)
         set_core_title(target_root, title)
         fill_running_headers(target_root, layout)
+        detach_external_chart_workbooks(target_root)
         validate_package(target_root)
         zip_directory(target_root, output_path)
 
