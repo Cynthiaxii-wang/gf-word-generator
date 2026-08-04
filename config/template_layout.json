@@ -69,6 +69,7 @@
   },
   "table_style": {
     "header_fill": "2E3160",
+    "header_font_color": "FFFFFF",
     "first_column_fill": "F2F2F2"
   },
   "data_source": {

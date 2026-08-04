@@ -1047,6 +1047,7 @@ def normalize_native_table(
     # existing fonts, borders, alignment, spacing, and row geometry remain as
     # supplied by the source/template normalization above.
     header_fill = table_style.get("header_fill", "2E3160")
+    header_font_color = table_style.get("header_font_color", "FFFFFF")
     first_column_fill = table_style.get("first_column_fill", "F2F2F2")
     rows = table.findall("w:tr", namespaces=NS)
     for row_index, row in enumerate(rows):
@@ -1068,6 +1069,14 @@ def normalize_native_table(
                 header_fill if row_index == 0 else first_column_fill,
             )
             reorder_word_properties(cell_properties, W_TCPR_ORDER)
+            if row_index == 0:
+                for run in cell.xpath(".//w:r", namespaces=NS):
+                    run_properties = ensure_run_properties(run)
+                    color = run_properties.find("w:color", namespaces=NS)
+                    if color is None:
+                        color = etree.SubElement(run_properties, qn(W_NS, "color"))
+                    color.set(qn(W_NS, "val"), header_font_color)
+                    reorder_word_properties(run_properties, W_RPR_ORDER)
 
 
 def figure_layout_table(
