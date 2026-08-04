@@ -1070,12 +1070,29 @@ def normalize_native_table(
             )
             reorder_word_properties(cell_properties, W_TCPR_ORDER)
             if row_index == 0:
-                for run in cell.xpath(".//w:r", namespaces=NS):
-                    run_properties = ensure_run_properties(run)
+                color_properties = []
+                for paragraph in cell.xpath(".//w:p", namespaces=NS):
+                    paragraph_properties = ensure_paragraph_properties(paragraph)
+                    paragraph_run_properties = paragraph_properties.find(
+                        "w:rPr", namespaces=NS
+                    )
+                    if paragraph_run_properties is None:
+                        paragraph_run_properties = etree.SubElement(
+                            paragraph_properties, qn(W_NS, "rPr")
+                        )
+                    color_properties.append(paragraph_run_properties)
+                    reorder_word_properties(paragraph_properties, W_PPR_ORDER)
+                color_properties.extend(
+                    ensure_run_properties(run)
+                    for run in cell.xpath(".//w:r", namespaces=NS)
+                )
+                for run_properties in color_properties:
                     color = run_properties.find("w:color", namespaces=NS)
                     if color is None:
                         color = etree.SubElement(run_properties, qn(W_NS, "color"))
                     color.set(qn(W_NS, "val"), header_font_color)
+                    for theme_attribute in ("themeColor", "themeTint", "themeShade"):
+                        color.attrib.pop(qn(W_NS, theme_attribute), None)
                     reorder_word_properties(run_properties, W_RPR_ORDER)
 
 
