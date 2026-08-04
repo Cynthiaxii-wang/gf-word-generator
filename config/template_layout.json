@@ -67,6 +67,10 @@
     "after_twips": 40,
     "table_after_twips": 120
   },
+  "table_style": {
+    "header_fill": "2E3160",
+    "first_column_fill": "F2F2F2"
+  },
   "data_source": {
     "text": "数据来源：Bloomberg、广发证券发展研究中心",
     "font": "思源黑体 CN Light",
