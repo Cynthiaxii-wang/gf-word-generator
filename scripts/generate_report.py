@@ -980,6 +980,7 @@ def normalize_native_table(
     width_dxa: int,
     indent_dxa: int,
     text_config: dict,
+    table_style: dict | None = None,
 ) -> None:
     """Scale a source table to the configured report grid and font weights."""
 
@@ -1038,6 +1039,35 @@ def normalize_native_table(
                 and bold.get(qn(W_NS, "val"), "1") not in {"0", "false", "off"}
             )
             set_run_font(run, medium_font if emphasized else light_font)
+
+    if not table_style:
+        return
+
+    # Apply only the two fill roles specified by the GF color sheet.  All
+    # existing fonts, borders, alignment, spacing, and row geometry remain as
+    # supplied by the source/template normalization above.
+    header_fill = table_style.get("header_fill", "2E3160")
+    first_column_fill = table_style.get("first_column_fill", "F2F2F2")
+    rows = table.findall("w:tr", namespaces=NS)
+    for row_index, row in enumerate(rows):
+        for column_index, cell in enumerate(row.findall("w:tc", namespaces=NS)):
+            if row_index != 0 and column_index != 0:
+                continue
+            cell_properties = cell.find("w:tcPr", namespaces=NS)
+            if cell_properties is None:
+                cell_properties = etree.Element(qn(W_NS, "tcPr"))
+                cell.insert(0, cell_properties)
+
+            shading = cell_properties.find("w:shd", namespaces=NS)
+            if shading is None:
+                shading = etree.SubElement(cell_properties, qn(W_NS, "shd"))
+            shading.set(qn(W_NS, "val"), "clear")
+            shading.set(qn(W_NS, "color"), "auto")
+            shading.set(
+                qn(W_NS, "fill"),
+                header_fill if row_index == 0 else first_column_fill,
+            )
+            reorder_word_properties(cell_properties, W_TCPR_ORDER)
 
 
 def figure_layout_table(
@@ -1634,6 +1664,7 @@ def build_body_blocks(
             int(config.get("cell_width_dxa", 8051)),
             0 if nested else int(config.get("indent_dxa", 2689)),
             text_config,
+            layout.get("table_style") if nested else None,
         )
         return cloned
 
