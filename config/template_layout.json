@@ -27,6 +27,7 @@
   "figure_layout": {
     "width_dxa": 8051,
     "indent_dxa": 2689,
+    "alignment": "right",
     "cell_width_dxa": 8051,
     "cell_margin_left_dxa": 0,
     "cell_margin_right_dxa": 0,

@@ -532,7 +532,14 @@ def index_entries(
             add_caption(raw_text, kind)
             pending_caption = None
         elif item_type == "table":
-            if pending_caption is not None:
+            visual_groups = item.get("visual_groups", [])
+            if visual_groups:
+                for group in visual_groups:
+                    raw_text = group.get("caption", "")
+                    kind = "表" if raw_text.lstrip(" '▪").startswith("表") else "图"
+                    add_caption(raw_text, kind)
+                pending_caption = None
+            elif pending_caption is not None:
                 raw_text, kind = pending_caption
                 add_caption(raw_text, "表" if kind == "表" else kind)
                 pending_caption = None
@@ -859,7 +866,10 @@ def numbered_caption_paragraph(
     return paragraph
 
 
-def data_source_paragraph(layout: dict) -> etree._Element:
+def data_source_paragraph(
+    layout: dict,
+    source_text: str | None = None,
+) -> etree._Element:
     """Build the standard source line shown below every figure and table."""
     config = layout.get("data_source", {})
     paragraph = etree.Element(qn(W_NS, "p"))
@@ -871,7 +881,8 @@ def data_source_paragraph(layout: dict) -> etree._Element:
     spacing.set(qn(W_NS, "lineRule"), config.get("line_rule", "exact"))
     run = append_run(
         paragraph,
-        config.get("text", "数据来源：Bloomberg、广发证券发展研究中心"),
+        source_text
+        or config.get("text", "数据来源：Bloomberg、广发证券发展研究中心"),
     )
     set_run_font(
         run,
@@ -1621,6 +1632,119 @@ def build_body_blocks(
         )
         return cloned
 
+    def restyle_visual_container_table(
+        table: etree._Element,
+        groups: list[dict],
+    ) -> etree._Element:
+        """Apply report caption/source styling inside a figure-holder table."""
+        rows = table.findall("w:tr", namespaces=NS)
+        config = layout.get("figure_layout", {})
+        table_width = int(config.get("width_dxa", 8051))
+        max_width = int(config.get("max_drawing_width_emu", 5112000))
+
+        properties = table.find("w:tblPr", namespaces=NS)
+        if properties is None:
+            properties = etree.Element(qn(W_NS, "tblPr"))
+            table.insert(0, properties)
+
+        # These figures arrive inside a one-column holder table.  Give that
+        # holder the template's exact 14.2 cm width and align its *outer right
+        # edge* with the report text grid.  A copied tblInd is not reliable here
+        # because Word can retain the source table's effective width and leave
+        # the whole figure shifted toward the left margin.
+        width = properties.find("w:tblW", namespaces=NS)
+        if width is None:
+            width = etree.SubElement(properties, qn(W_NS, "tblW"))
+        width.set(qn(W_NS, "w"), str(table_width))
+        width.set(qn(W_NS, "type"), "dxa")
+        indent = properties.find("w:tblInd", namespaces=NS)
+        if indent is not None:
+            properties.remove(indent)
+        alignment = properties.find("w:jc", namespaces=NS)
+        if alignment is None:
+            alignment = etree.SubElement(properties, qn(W_NS, "jc"))
+        alignment.set(qn(W_NS, "val"), config.get("alignment", "right"))
+        fixed = properties.find("w:tblLayout", namespaces=NS)
+        if fixed is None:
+            fixed = etree.SubElement(properties, qn(W_NS, "tblLayout"))
+        fixed.set(qn(W_NS, "type"), "fixed")
+
+        grid_columns = table.xpath("./w:tblGrid/w:gridCol", namespaces=NS)
+        if len(grid_columns) == 1:
+            grid_columns[0].set(qn(W_NS, "w"), str(table_width))
+        for cell in table.xpath("./w:tr/w:tc", namespaces=NS):
+            cell_properties = cell.find("w:tcPr", namespaces=NS)
+            if cell_properties is None:
+                cell_properties = etree.Element(qn(W_NS, "tcPr"))
+                cell.insert(0, cell_properties)
+            cell_width = cell_properties.find("w:tcW", namespaces=NS)
+            if cell_width is None:
+                cell_width = etree.SubElement(cell_properties, qn(W_NS, "tcW"))
+            cell_width.set(qn(W_NS, "w"), str(table_width))
+            cell_width.set(qn(W_NS, "type"), "dxa")
+            reorder_word_properties(cell_properties, W_TCPR_ORDER)
+
+        borders = properties.find("w:tblBorders", namespaces=NS)
+        if borders is None:
+            borders = etree.SubElement(properties, qn(W_NS, "tblBorders"))
+        for side in ("top", "left", "bottom", "right", "insideH", "insideV"):
+            border = borders.find(f"w:{side}", namespaces=NS)
+            if border is None:
+                border = etree.SubElement(borders, qn(W_NS, side))
+            border.set(qn(W_NS, "val"), "nil")
+        reorder_word_properties(properties, W_TBLPR_ORDER)
+
+        def first_cell(row: etree._Element) -> etree._Element:
+            cell = row.find("w:tc", namespaces=NS)
+            if cell is None:
+                raise ValueError("Visual container row has no table cell")
+            return cell
+
+        def replace_cell_body(cell: etree._Element, block: etree._Element) -> None:
+            for child in list(cell):
+                if child.tag != qn(W_NS, "tcPr"):
+                    cell.remove(child)
+            cell.append(block)
+
+        for group in groups:
+            caption_row_index = int(group["caption_row"])
+            visual_row_index = int(group["visual_row"])
+            source_row_index = int(group["source_row"])
+            if source_row_index >= len(rows):
+                raise ValueError(f"Invalid visual table group: {group}")
+
+            raw_caption = group.get("caption", "")
+            explicit_kind = (
+                "表" if raw_caption.lstrip(" '▪").startswith("表") else "图"
+            )
+            replace_cell_body(
+                first_cell(rows[caption_row_index]),
+                make_caption(raw_caption, explicit_kind),
+            )
+
+            visual_cell = first_cell(rows[visual_row_index])
+            remove_picture_outline(visual_cell)
+            for paragraph in visual_cell.xpath(".//w:p[.//w:drawing or .//w:pict]", namespaces=NS):
+                set_paragraph_alignment(paragraph, "center")
+                scale_visual_to_width(paragraph, max_width)
+
+            replace_cell_body(
+                first_cell(rows[source_row_index]),
+                data_source_paragraph(layout, group.get("source")),
+            )
+
+            for row_index in (
+                caption_row_index, visual_row_index, source_row_index
+            ):
+                row_properties = rows[row_index].find("w:trPr", namespaces=NS)
+                if row_properties is None:
+                    row_properties = etree.Element(qn(W_NS, "trPr"))
+                    rows[row_index].insert(0, row_properties)
+                if row_properties.find("w:cantSplit", namespaces=NS) is None:
+                    etree.SubElement(row_properties, qn(W_NS, "cantSplit"))
+
+        return table
+
     index = 0
     while index < len(body_content):
         item = body_content[index]
@@ -1736,9 +1860,17 @@ def build_body_blocks(
             index += 1
             continue
         if block_type == "table":
-            blocks.append(
-                figure_layout_table(None, imported_table(item), layout)
-            )
+            visual_groups = item.get("visual_groups", [])
+            if visual_groups:
+                blocks.append(
+                    restyle_visual_container_table(
+                        imported_table(item, nested=False), visual_groups
+                    )
+                )
+            else:
+                blocks.append(
+                    figure_layout_table(None, imported_table(item), layout)
+                )
             index += 1
             continue
         # Unknown parser extensions are ignored only when they contain no text.

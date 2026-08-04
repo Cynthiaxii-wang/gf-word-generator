@@ -500,6 +500,45 @@ def parse_table(tbl):
     return rows
 
 
+def parse_visual_table_groups(tbl):
+    """Recognize caption / visual / source triplets stored inside a table.
+
+    Research drafts commonly use a one-column table to keep a figure title,
+    pasted chart image, and source line together.  Treating that container as
+    an ordinary data table preserves the words but bypasses report caption
+    numbering and styling.
+    """
+    rows = tbl.xpath("./w:tr", namespaces=NS)
+    if not rows or len(rows) % 3:
+        return []
+    groups = []
+    for row_index in range(0, len(rows), 3):
+        caption_row, visual_row, source_row = rows[row_index : row_index + 3]
+        caption = "".join(
+            caption_row.xpath(".//w:t/text()", namespaces=NS)
+        ).strip()
+        source = "".join(
+            source_row.xpath(".//w:t/text()", namespaces=NS)
+        ).strip()
+        has_visual = bool(
+            visual_row.xpath(".//w:drawing | .//w:pict", namespaces=NS)
+        )
+        if not re.match(r"^[\s'▪]*[图表]\s*\d*\s*[：:]", caption):
+            return []
+        if not has_visual or not source.startswith("数据来源"):
+            return []
+        groups.append(
+            {
+                "caption": caption,
+                "source": source,
+                "caption_row": row_index,
+                "visual_row": row_index + 1,
+                "source_row": row_index + 2,
+            }
+        )
+    return groups
+
+
 
 # ==========================
 # 主解析
@@ -648,16 +687,14 @@ def parse(temp_dir):
         # table
 
         elif tag == "tbl":
-
-
-            content.append(
-                {
-                    "type":"table",
-
-                    "data":
-                    parse_table(child)
-                }
-            )
+            table_item = {
+                "type":"table",
+                "data": parse_table(child),
+            }
+            visual_groups = parse_visual_table_groups(child)
+            if visual_groups:
+                table_item["visual_groups"] = visual_groups
+            content.append(table_item)
 
 
     return content
