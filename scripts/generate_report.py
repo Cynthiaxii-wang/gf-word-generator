@@ -1583,12 +1583,17 @@ def build_body_blocks(
         sequence_name = explicit_kind or ("表" if raw_text.lstrip().startswith("表") else "图")
         sequence_counts[sequence_name] += 1
         role = "table_caption" if sequence_name == "表" else "figure_caption"
+        separator_config = deepcopy(layout.get("caption_separator", {}))
+        if sequence_name == "表":
+            separator_config["after_twips"] = separator_config.get(
+                "table_after_twips", 120
+            )
         return numbered_caption_paragraph(
             prototypes[role],
             raw_text,
             sequence_name,
             sequence_counts[sequence_name],
-            layout.get("caption_separator"),
+            separator_config,
         )
 
     def imported_figure(item: dict) -> etree._Element:
@@ -1640,6 +1645,7 @@ def build_body_blocks(
         rows = table.findall("w:tr", namespaces=NS)
         config = layout.get("figure_layout", {})
         table_width = int(config.get("width_dxa", 8051))
+        table_indent = int(config.get("indent_dxa", 2689))
         max_width = int(config.get("max_drawing_width_emu", 5112000))
 
         properties = table.find("w:tblPr", namespaces=NS)
@@ -1647,23 +1653,23 @@ def build_body_blocks(
             properties = etree.Element(qn(W_NS, "tblPr"))
             table.insert(0, properties)
 
-        # These figures arrive inside a one-column holder table.  Give that
-        # holder the template's exact 14.2 cm width and align its *outer right
-        # edge* with the report text grid.  A copied tblInd is not reliable here
-        # because Word can retain the source table's effective width and leave
-        # the whole figure shifted toward the left margin.
+        # These figures arrive inside a one-column holder table.  Match the
+        # retained report grid exactly: 14.2 cm wide with the template's
+        # 4.74 cm table indent.  The visual itself is right-aligned separately
+        # below when its native canvas is narrower than the holder.
         width = properties.find("w:tblW", namespaces=NS)
         if width is None:
             width = etree.SubElement(properties, qn(W_NS, "tblW"))
         width.set(qn(W_NS, "w"), str(table_width))
         width.set(qn(W_NS, "type"), "dxa")
         indent = properties.find("w:tblInd", namespaces=NS)
-        if indent is not None:
-            properties.remove(indent)
+        if indent is None:
+            indent = etree.SubElement(properties, qn(W_NS, "tblInd"))
+        indent.set(qn(W_NS, "w"), str(table_indent))
+        indent.set(qn(W_NS, "type"), "dxa")
         alignment = properties.find("w:jc", namespaces=NS)
-        if alignment is None:
-            alignment = etree.SubElement(properties, qn(W_NS, "jc"))
-        alignment.set(qn(W_NS, "val"), config.get("alignment", "right"))
+        if alignment is not None:
+            properties.remove(alignment)
         fixed = properties.find("w:tblLayout", namespaces=NS)
         if fixed is None:
             fixed = etree.SubElement(properties, qn(W_NS, "tblLayout"))
@@ -1725,7 +1731,9 @@ def build_body_blocks(
             visual_cell = first_cell(rows[visual_row_index])
             remove_picture_outline(visual_cell)
             for paragraph in visual_cell.xpath(".//w:p[.//w:drawing or .//w:pict]", namespaces=NS):
-                set_paragraph_alignment(paragraph, "center")
+                set_paragraph_alignment(
+                    paragraph, config.get("visual_alignment", "right")
+                )
                 scale_visual_to_width(paragraph, max_width)
 
             replace_cell_body(
