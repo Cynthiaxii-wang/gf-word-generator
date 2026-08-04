@@ -2,7 +2,7 @@
   "version": 1,
   "template": "总量通用.docx",
   "chart_template": "template/图表模板案例新版.xlsx",
-  "back_matter_template": "examples/output/【广发策略】从杠杆繁荣到筹码松动：韩国杠杆去化走到哪一步？(1).docx",
+  "back_matter_template": "template/总量通用.docx",
   "back_matter_start_section_break": 2,
   "cover": {
     "top_level_table_index": 0,
