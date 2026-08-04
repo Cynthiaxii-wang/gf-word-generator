@@ -27,7 +27,7 @@
   "figure_layout": {
     "width_dxa": 8051,
     "indent_dxa": 2689,
-    "alignment": "right",
+    "visual_alignment": "right",
     "cell_width_dxa": 8051,
     "cell_margin_left_dxa": 0,
     "cell_margin_right_dxa": 0,
@@ -64,7 +64,8 @@
     "size_eighth_points": 4,
     "space_points": 1,
     "color": "000000",
-    "after_twips": 40
+    "after_twips": 40,
+    "table_after_twips": 120
   },
   "data_source": {
     "text": "数据来源：Bloomberg、广发证券发展研究中心",
