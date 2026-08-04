@@ -1914,7 +1914,7 @@ def generate(
     risk_heading = risk_heading_for_content(body_content)
     output_path = output_path_for(structure["filename"], output_dir)
 
-    with tempfile.TemporaryDirectory(prefix="report-generator-", dir="/private/tmp") as temp:
+    with tempfile.TemporaryDirectory(prefix="report-generator-") as temp:
         temp_path = Path(temp)
         source_root = temp_path / "source"
         target_root = temp_path / "target"
