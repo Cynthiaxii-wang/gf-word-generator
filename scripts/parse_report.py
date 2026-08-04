@@ -36,39 +36,7 @@ ROOT_DIR = (
     .parent
     .parent
 )
-
-
-INPUT_DIR = (
-    ROOT_DIR
-    /
-    "examples"
-    /
-    "raw"
-)
-
-
-OUTPUT_DIR = (
-    ROOT_DIR
-    /
-    "examples"
-    /
-    "output"
-)
-
-
-OUTPUT_JSON = (
-    OUTPUT_DIR
-    /
-    "raw_structure.json"
-)
-
-
-INPUT_PATH = list(
-    INPUT_DIR.glob("*.docx")
-)[0]
-
-
-
+# 输出路径由命令行参数提供
 # ==========================
 # namespace
 # ==========================
@@ -211,7 +179,7 @@ def paragraph_is_heading_like(element):
 # 解压docx
 # ==========================
 
-def unzip_docx(input_path=INPUT_PATH):
+def unzip_docx(input_path):
 
     temp_dir = (
         ROOT_DIR
@@ -248,7 +216,7 @@ def unzip_docx(input_path=INPUT_PATH):
 # 导出图片/chart
 # ==========================
 
-def export_visual_assets(temp_dir, output_dir=OUTPUT_DIR):
+def export_visual_assets(temp_dir, output_dir):
 
     output_media = (
         output_dir
@@ -702,15 +670,15 @@ def parse_args():
 
     parser.add_argument(
         "input",
-        nargs="?",
         type=Path,
-        default=INPUT_PATH
+        help="Input DOCX path"
     )
 
     parser.add_argument(
         "--output",
         type=Path,
-        default=OUTPUT_JSON
+        required=True,
+        help="Output JSON path"
     )
 
     return parser.parse_args()
