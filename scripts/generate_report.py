@@ -1031,6 +1031,11 @@ def normalize_native_table(
 
     light_font = text_config.get("normal_font", "思源黑体 CN Light")
     medium_font = text_config.get("emphasis_font", "思源黑体 CN Medium")
+    table_font_size = (
+        int(table_style.get("font_size_half_points", 12))
+        if table_style
+        else None
+    )
     for row_index, row in enumerate(table.findall("w:tr", namespaces=NS)):
         for run in row.xpath(".//w:r", namespaces=NS):
             bold = run.find("w:rPr/w:b", namespaces=NS)
@@ -1038,7 +1043,11 @@ def normalize_native_table(
                 bold is not None
                 and bold.get(qn(W_NS, "val"), "1") not in {"0", "false", "off"}
             )
-            set_run_font(run, medium_font if emphasized else light_font)
+            set_run_font(
+                run,
+                medium_font if emphasized else light_font,
+                table_font_size,
+            )
 
     if not table_style:
         return
