@@ -1685,7 +1685,11 @@ def append_risk_section(
     blocks.append(heading)
     for index, value in enumerate(items):
         is_last = index == len(items) - 1
-        prototype = item_prototypes[-1] if is_last else item_prototypes[min(index, len(item_prototypes) - 2)]
+        # The retained template alternates secondary-heading and body
+        # prototypes in this section.  Risk factors are body paragraphs, so
+        # always use the final body prototype; otherwise early items inherit a
+        # heading style and incorrectly appear as entries in Word's TOC.
+        prototype = item_prototypes[-1]
         paragraph = (
             clone_with_imported_relationships(prototype, importer, drawing_ids)
             if importer is not None
