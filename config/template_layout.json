@@ -35,6 +35,20 @@
     "keep_together": true,
     "center_visual": true
   },
+  "expanded_table_layout": {
+    "width_dxa": 10740,
+    "indent_dxa": 0,
+    "cell_width_dxa": 10740
+  },
+  "table_layout_rules": {
+    "expanded_min_columns": 6,
+    "expanded_max_cell_lines": 3,
+    "expanded_multiline_cell_lines": 3,
+    "expanded_multiline_cell_ratio": 0.2,
+    "expanded_max_estimated_height_twips": 9800,
+    "estimated_line_height_twips": 160,
+    "estimated_row_padding_twips": 80
+  },
   "double_figure_layout": {
     "width_dxa": 10296,
     "column_width_dxa": 5148,

@@ -13,12 +13,14 @@ from copy import deepcopy
 from datetime import date
 import itertools
 import json
+import math
 import os
 from pathlib import Path, PurePosixPath
 import posixpath
 import re
 import shutil
 import tempfile
+import unicodedata
 from zipfile import ZIP_DEFLATED, ZipFile
 
 from lxml import etree
@@ -1105,13 +1107,127 @@ def normalize_native_table(
                     reorder_word_properties(run_properties, W_RPR_ORDER)
 
 
+def table_layout_config(table: etree._Element, layout: dict) -> dict:
+    """Choose the standard or full-page grid from estimated Word wrapping."""
+
+    standard = dict(layout.get("figure_layout", {}))
+    expanded = layout.get("expanded_table_layout", {})
+    rules = layout.get("table_layout_rules", {})
+    if not expanded:
+        return standard
+
+    rows = table.findall("w:tr", namespaces=NS)
+    if not rows:
+        return standard
+
+    grid_nodes = table.xpath("./w:tblGrid/w:gridCol", namespaces=NS)
+    grid_widths = [
+        max(1, int(node.get(qn(W_NS, "w"), "1")))
+        for node in grid_nodes
+    ]
+    column_count = len(grid_widths)
+    if not column_count:
+        column_count = max(
+            (
+                sum(
+                    int(cell.xpath("string(w:tcPr/w:gridSpan/@w:val)", namespaces=NS) or 1)
+                    for cell in row.findall("w:tc", namespaces=NS)
+                )
+                for row in rows
+            ),
+            default=1,
+        )
+        grid_widths = [1] * column_count
+
+    standard_width = int(standard.get("cell_width_dxa", 8051))
+    total_grid_width = max(1, sum(grid_widths))
+    scaled_widths = [
+        max(1, round(width * standard_width / total_grid_width))
+        for width in grid_widths
+    ]
+    scaled_widths[-1] += standard_width - sum(scaled_widths)
+
+    font_half_points = int(
+        layout.get("table_style", {}).get("font_size_half_points", 12)
+    )
+    font_points = max(1.0, font_half_points / 2)
+    line_height = int(rules.get("estimated_line_height_twips", 160))
+    row_padding = int(rules.get("estimated_row_padding_twips", 80))
+    body_cell_lines: list[int] = []
+    estimated_height = 0
+
+    def text_units(text: str) -> float:
+        units = 0.0
+        for character in text:
+            if character.isspace():
+                units += 0.35
+            elif unicodedata.east_asian_width(character) in {"W", "F"}:
+                units += 1.0
+            else:
+                units += 0.55
+        return units
+
+    for row_index, row in enumerate(rows):
+        column_index = 0
+        row_lines = 1
+        for cell in row.findall("w:tc", namespaces=NS):
+            span = int(
+                cell.xpath("string(w:tcPr/w:gridSpan/@w:val)", namespaces=NS)
+                or 1
+            )
+            cell_width = sum(scaled_widths[column_index : column_index + span])
+            column_index += span
+            # Reserve a small amount for the cell margins before estimating
+            # how many 6-point Chinese-character units fit on each line.
+            usable_points = max(font_points, cell_width / 20 - 8)
+            line_capacity = max(1.0, usable_points / font_points)
+            paragraphs = cell.findall("w:p", namespaces=NS)
+            cell_lines = 0
+            for paragraph in paragraphs or [cell]:
+                text = "".join(paragraph.xpath(".//w:t/text()", namespaces=NS))
+                explicit_lines = max(
+                    1,
+                    len(paragraph.xpath(".//w:br", namespaces=NS)) + 1,
+                )
+                cell_lines += max(
+                    explicit_lines,
+                    math.ceil(text_units(text) / line_capacity),
+                )
+            cell_lines = max(1, cell_lines)
+            row_lines = max(row_lines, cell_lines)
+            if row_index > 0:
+                body_cell_lines.append(cell_lines)
+        estimated_height += row_lines * line_height + row_padding
+
+    max_cell_lines = max(body_cell_lines, default=1)
+    multiline_limit = int(rules.get("expanded_multiline_cell_lines", 3))
+    multiline_count = sum(
+        line_count >= multiline_limit for line_count in body_cell_lines
+    )
+    multiline_ratio = multiline_count / max(1, len(body_cell_lines))
+    use_expanded = any(
+        (
+            column_count >= int(rules.get("expanded_min_columns", 6)),
+            max_cell_lines > int(rules.get("expanded_max_cell_lines", 3)),
+            multiline_ratio
+            > float(rules.get("expanded_multiline_cell_ratio", 0.2)),
+            estimated_height
+            > int(rules.get("expanded_max_estimated_height_twips", 9800)),
+        )
+    )
+    if use_expanded:
+        standard.update(expanded)
+    return standard
+
+
 def figure_layout_table(
     caption: etree._Element | None,
     visual: etree._Element,
     layout: dict,
+    config_override: dict | None = None,
 ) -> etree._Element:
     """Position an editable visual using the reference report's fixed grid."""
-    config = layout.get("figure_layout", {})
+    config = config_override or layout.get("figure_layout", {})
     table_width = int(config.get("width_dxa", 8051))
     table_indent = int(config.get("indent_dxa", 2689))
     cell_width = int(config.get("cell_width_dxa", table_width))
@@ -1682,18 +1798,26 @@ def build_body_blocks(
         remove_picture_outline(cloned)
         return cloned
 
-    def imported_table(item: dict, nested: bool = True) -> etree._Element:
+    def source_table(item: dict) -> etree._Element:
         asset = assets.get(item.get("asset_id"))
         if not asset:
             raise ValueError(f"Table has no native asset: {item.get('asset_id')}")
-        source_block = source_body[asset["body_index"]]
-        if source_block.tag != qn(W_NS, "tbl"):
+        table = source_body[asset["body_index"]]
+        if table.tag != qn(W_NS, "tbl"):
             raise ValueError(f"Table locator does not point to w:tbl: {asset}")
+        return table
+
+    def imported_table(
+        item: dict,
+        nested: bool = True,
+        table_config: dict | None = None,
+    ) -> etree._Element:
+        source_block = source_table(item)
         cloned = clone_with_imported_relationships(
             source_block, importer, drawing_ids
         )
         import_missing_styles(cloned, source_styles, target_styles)
-        config = layout.get("figure_layout", {})
+        config = table_config or layout.get("figure_layout", {})
         normalize_native_table(
             cloned,
             int(config.get("cell_width_dxa", 8051)),
@@ -1908,12 +2032,15 @@ def build_body_blocks(
                 and index + 1 < len(body_content)
                 and body_content[index + 1].get("type") == "table"
             ):
-                table = imported_table(body_content[index + 1])
+                table_item = body_content[index + 1]
+                table_config = table_layout_config(source_table(table_item), layout)
+                table = imported_table(table_item, table_config=table_config)
                 blocks.append(
                     figure_layout_table(
                         make_caption(raw_caption, explicit_kind),
                         table,
                         layout,
+                        table_config,
                     )
                 )
                 index += 2
@@ -1942,8 +2069,14 @@ def build_body_blocks(
                     )
                 )
             else:
+                table_config = table_layout_config(source_table(item), layout)
                 blocks.append(
-                    figure_layout_table(None, imported_table(item), layout)
+                    figure_layout_table(
+                        None,
+                        imported_table(item, table_config=table_config),
+                        layout,
+                        table_config,
+                    )
                 )
             index += 1
             continue
