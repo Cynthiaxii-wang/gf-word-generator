@@ -1063,6 +1063,15 @@ def normalize_native_table(
     rows = table.findall("w:tr", namespaces=NS)
     for row_index, row in enumerate(rows):
         for column_index, cell in enumerate(row.findall("w:tc", namespaces=NS)):
+            # Header cells, including the top-left cell, are centered.  The
+            # gray label cells in the first body column are left-aligned; all
+            # remaining body cells are centered.
+            alignment = (
+                "left" if row_index > 0 and column_index == 0 else "center"
+            )
+            for paragraph in cell.findall("w:p", namespaces=NS):
+                set_paragraph_alignment(paragraph, alignment)
+
             if row_index != 0 and column_index != 0:
                 continue
             cell_properties = cell.find("w:tcPr", namespaces=NS)
